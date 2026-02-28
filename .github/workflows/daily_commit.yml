@@ -1,0 +1,26 @@
+name: Do Nothing Tool
+
+on:
+  schedule:
+    # Berjalan otomatis setiap hari jam 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Memungkinkan kamu menjalankan manual jika ingin
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update mark file
+        run: |
+          date > mark.txt
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add mark.txt
+          git commit -m "Auto contribution: Doing nothing today"
+          git push
