@@ -1,10 +1,10 @@
-name: Do Nothing Tool
+name: Do Nothing Tool - Varied
 
 on:
   schedule:
-    # Berjalan otomatis setiap hari jam 00:00 UTC
+    # Berjalan setiap hari jam 07:00 WIB (00:00 UTC)
     - cron: '0 0 * * *'
-  workflow_dispatch: # Memungkinkan kamu menjalankan manual jika ingin
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,14 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Update mark file
+      - name: Random Commits
         run: |
-          date > mark.txt
-
-      - name: Commit and Push
-        run: |
+          # Menghasilkan angka acak antara 1 sampai 5
+          num=$(( ( RANDOM % 5 )  + 1 ))
+          
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add mark.txt
-          git commit -m "Auto contribution: Doing nothing today"
+          
+          for i in $(seq 1 $num)
+          do
+            echo "Update ke-$i pada $(date)" > mark.txt
+            git add mark.txt
+            git commit -m "Progress update: $(date)"
+          done
+          
           git push
